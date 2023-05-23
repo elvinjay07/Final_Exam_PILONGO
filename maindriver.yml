@@ -1,0 +1,39 @@
+---
+- hosts: all
+  become: true
+  pre_tasks:
+    - name: Update CentOS
+      dnf:
+        update_cache: yes
+      changed_when: false
+      when: ansible_distribution == "CentOS"
+
+    - name: Update Ubuntu OS
+      apt:
+        upgrade: dist
+        update_cache: yes
+      changed_when: false
+      when: ansible_distribution == "Ubuntu"
+
+    - name: Change Motd
+      vars:
+        ansible_managed_by: sysad_pilongo
+
+      tasks:
+        - name: Update Motd
+          copy:
+            content: "Ansible Managed by {{ ansible_managed_by }}"
+            dest: /etc/motd
+
+
+- hosts: Ubuntu
+  become: true
+  roles:
+    - Monitor
+    - Enterprise
+
+- hosts: CentOS
+  become: true
+  roles:
+    - Enterprise
+    - Monitor

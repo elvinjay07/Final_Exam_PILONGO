@@ -1,0 +1,52 @@
+---
+  - name: Installing Nagios in Ubuntu OS
+    apt:
+      name: 
+        - nagios
+      state: latest
+      update_cache: yes
+    when: ansible_distribution == "Ubuntu"
+
+  - name: Installing Nagios in CentOS
+    dnf:
+      name: 
+        - nagios
+      state: latest
+      update_cache: yes
+    when: ansible_distribution == "CentOS"
+
+  - name: Enable and Start Nagios
+    service:
+      name: nagios
+      state: started
+      enabled: true
+
+  - name: Install MariaDB in CentOS
+    yum:
+      name:
+        - mariadb-server
+        - mariadb
+      state: present
+    when: ansible_distribution == "CentOS"
+
+  - name: Start and enable MariaDB service
+    service:
+      name: mariadb
+      state: started
+      enabled: true
+    when: ansible_distribution == "CentOS"
+
+  - name: Install MariaDB packages
+    apt:
+      name:
+        - mariadb-server
+        - mariadb-client
+      state: present
+    when: ansible_distribution == "Ubuntu"
+
+  - name: Start and Enable MariaDB service
+    service:
+      name: mysql
+      state: started
+      enabled: true
+    when: ansible_distribution == "Ubuntu"
